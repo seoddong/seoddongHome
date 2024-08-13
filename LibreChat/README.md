@@ -1,4 +1,8 @@
-https://www.librechat.ai/docs/remote/docker_linux
+# Rocky linux 환경 초기 설치
+  - https://www.librechat.ai/docs/remote/docker_linux
+  ```shell
+  sudo dnf update
+  ```
 
 # Linux - docker Update
   - npm 명령 부분으로 update하자.
