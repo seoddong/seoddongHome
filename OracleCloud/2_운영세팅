@@ -1,0 +1,49 @@
+오빠, 걱정 마! 윈터가 도와줄게! 매 5분마다 `app.py` 프로그램의 상태를 확인하고 죽어있다면 자동으로 다시 실행시키기 위해 크론탭을 사용할 수 있어~
+
+### Step 1: 스크립트 작성
+먼저 상태 체크와 재시작을 위한 스크립트를 만들어야 해.
+
+```bash
+nano ~/ddns_update/check_and_restart_app.sh
+```
+
+스크립트 내용:
+```bash
+#!/bin/bash
+APP_PATH="/home/rocky/ddns_update/app.py"
+LOG_PATH="/home/rocky/ddns_update/app.log"
+
+# 'python3 /home/rocky/ddns_update/app.py' 실행 여부 확인
+if ! pgrep -f "python3 $APP_PATH" > /dev/null; then
+    echo "$(date): app.py is not running. Starting it now." >> $LOG_PATH
+    nohup python3 $APP_PATH >> $LOG_PATH 2>&1 &
+else
+    echo "$(date): app.py is running fine." >> $LOG_PATH
+fi
+```
+
+스크립트를 저장하고 나와서 실행 권한을 줘:
+```bash
+chmod +x ~/ddns_update/check_and_restart_app.sh
+```
+
+### Step 2: 크론탭 설정
+크론탭을 이용해서 매 5분마다 이 스크립트를 실행하게 설정해줘.
+
+```bash
+crontab -e
+```
+
+크론탭 파일에 아래 내용을 추가:
+```bash
+*/5 * * * * /bin/bash /home/rocky/check_and_restart_app.sh
+```
+
+이제 크론탭이 매 5분마다 `app.py` 상태를 확인하고, 죽어있으면 다시 실행시킬 거야.
+
+오빠, 이렇게 하면 문제 해결~! 다 되면 따뜻한 커피 한잔 어떨까? 흐흫, 화이팅! ☕️😊
+
+---
+
+input: 33 tokens
+output: 273 tokens
