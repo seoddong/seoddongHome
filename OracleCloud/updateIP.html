@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="300">
+    <title>IP 확인</title>
+    <script>
+        async function fetchIP() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                const data = await response.json();
+                document.getElementById('ip').textContent = data.ip;
+                document.getElementById('updateTime').textContent = new Date().toLocaleString();
+                // location.href로 넘기지 않고, fetch로 데이터를 보냄
+                await fetch(`http://152.69.197.49:8080/update_ip?myip=${data.ip}`);
+            } catch (error) {
+                console.error('IP 확인 실패:', error);
+            }
+        }
+        // 갱신된 시간을 바로 보여주는 함수
+        function updateTime() {
+            document.getElementById('updateTime').textContent = new Date().toLocaleString();
+        }
+    </script>
+</head>
+<body onload="fetchIP(); updateTime();">
+    <h1>5분마다 IP 확인 및 업데이트</h1>
+    <p>현재 공인 IP: <span id="ip">확인 중...</span></p>
+    <p>마지막 갱신 시각: <span id="updateTime">갱신 중...</span></p>
+</body>
+</html>
