@@ -89,23 +89,25 @@ IP 업데이트를 처리하고 현재 IP를 반환하는 간단한 Flask 애플
 `~/ddns_update/app.py` 파일을 만들고 내용 작성:
 ```python
 from flask import Flask, request, jsonify
+import datetime
 
 app = Flask(__name__)
 
-current_ip = 'Not updated yet'
+current_info = {'ip': 'Not updated yet', 'time': 'Not updated yet'}
 
 @app.route('/update_ip')
 def update_ip():
-    global current_ip
+    global current_info
     new_ip = request.args.get('myip')
     if new_ip:
-        current_ip = new_ip
-        return f"IP updated to {current_ip}", 200
+        current_info['ip'] = new_ip
+        current_info['time'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        return f"IP updated to {current_info['ip']} at {current_info['time']}", 200
     return "No IP provided", 400
 
-@app.route('/current_ip')
-def get_current_ip():
-    return jsonify({'ip': current_ip})
+@app.route('/current_info')
+def get_current_info():
+    return jsonify(current_info)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
